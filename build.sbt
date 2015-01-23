@@ -1,7 +1,7 @@
 import play.core.PlayVersion.{current => playVersion}
 import sbt.Keys._
 
-name := "securesocial-slick-bootstrap3-sample"
+name := "play2.3-scala2.11-slick2.1-securesocial3-bootstrap3-sample"
 organization := "com.micronautics"
 
 scalaVersion := "2.11.5"
@@ -10,38 +10,22 @@ version := "0.1.0"
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 libraryDependencies ++= Seq(
-		jdbc,
-		"com.typesafe.play"         %% "play"                % playVersion withSources(),
-    "com.typesafe.play"         %% "play-json"           % playVersion withSources(),
-    //"org.postgresql"            %  "postgresql"        % "9.3-1102-jdbc41" withSources(),
-    "ws.securesocial"           %% "securesocial"        % "master-SNAPSHOT" withSources(),
-    "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
-    "org.webjars"               %% "webjars-play"        % "2.3.0-2",
-    //"org.scalatestplus"         %% "play"                % "1.2.0" % "test",
-
-		"org.webjars"               %  "bootstrap"           % "3.3.2",
-		//"org.scalaj"                %% "scalaj-http"         % "0.3.14",
-		//"net.sf.jtidy"              %  "jtidy"               % "r938",
-		//com.github.scala-incubator.io"  %% "scala-io-core" % "0.4.2",
-		//"com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2",
-		//"org.jdom"                  %  "jdom2"               % "2.0.5",
-		//"jaxen"                     %  "jaxen"               % "1.1.6",
-		//"org.fluentlenium"          %  "fluentlenium-core"   % "0.9.2",
-		//"com.netflix.rxjava"      % "rxjava-scala"         % "0.15.0",
-		"org.scalatest"             %% "scalatest"           % "2.2.1" % "test" withSources(),
-		"junit"                     %  "junit"               % "4.12" % "test",
-		//"org.json4s"                %  "json4s-native_2.10"  % "3.2.5",
-		//"net.databinder.dispatch"   %  "dispatch-core_2.10"  % "0.11.0",
-		//"com.squareup.retrofit"     %  "retrofit"            % "1.0.0",
-		//"org.scala-lang"            %  "scala-swing"         % "2.10.3",
-		//"org.scala-lang"            %  "scala-reflect"       % "2.10.3",
-		//"org.scala-lang.modules"    %% "scala-async"         % "0.9.0-M2",
-		//"com.typesafe.play"         %% "play-slick"          % "0.6.0.1",
-		"com.github.nscala-time"      %% "nscala-time"         % "1.6.0" withSources(),
-		"org.joda"                    %  "joda-convert"        % "1.6" withSources(),
-		"com.github.tototoshi"        %% "slick-joda-mapper"   % "1.2.0" withSources()
-		//"org.seleniumhq.selenium"   %  "selenium-java"       % "2.35.0"
-	)
+  jdbc,
+  "com.typesafe.play"         %% "play"                % playVersion withSources(),
+  "com.typesafe.play"         %% "play-json"           % playVersion withSources(),
+  "org.webjars"               %% "webjars-play"        % "2.3.0-2",
+  "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
+  "ws.securesocial"           %% "securesocial"        % "master-SNAPSHOT" withSources(),
+  "org.webjars"               %  "bootstrap"           % "3.3.2",
+  //"com.typesafe.play"         %% "play-slick"          % "0.6.0.1",
+  "com.github.nscala-time"      %% "nscala-time"         % "1.6.0" withSources(),
+  "org.joda"                    %  "joda-convert"        % "1.6" withSources(),
+  "com.github.tototoshi"        %% "slick-joda-mapper"   % "1.2.0" withSources(),
+  //
+  //"org.scalatestplus"         %% "play"                % "1.2.0" % "test",
+  "org.scalatest"             %% "scalatest"           % "2.2.1" % "test" withSources(),
+  "junit"                     %  "junit"               % "4.12" % "test"
+)
 
 resolvers ++= Seq(
   Resolver.typesafeRepo("releases"),

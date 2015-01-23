@@ -11,8 +11,6 @@ case class Message(value: String)
 class MessageController(override implicit val env: RuntimeEnvironment[User]) extends SecureSocial[User] {
   implicit val fooWrites = Json.writes[Message]
 
-  def ???!(msg: String): Nothing = throw new RuntimeException(msg)
-
   def index() = UserAwareAction { implicit request =>
       val user = request.user
       Ok(views.html.index("hi user " + user, ""))
