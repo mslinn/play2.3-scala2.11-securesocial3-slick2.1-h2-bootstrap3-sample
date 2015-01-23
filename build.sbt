@@ -62,7 +62,7 @@ initialCommands in console := """ // make app resources accessible
    |import play.api.libs.json._
    |import play.api.Play.current
    |import play.Logger
-   |//import scala.slick.driver.PostgresDriver.simple._
+   |import scala.slick.driver.H2Driver.simple._
    |import scala.reflect.runtime.universe._
    |""".stripMargin
 
@@ -71,4 +71,3 @@ logLevel := Level.Warn
 logLevel in test := Level.Info // Level.Info is needed to see detailed output when running tests
 
 logLevel in compile := Level.Warn
-
