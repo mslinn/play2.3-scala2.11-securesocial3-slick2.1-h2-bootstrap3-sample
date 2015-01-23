@@ -1,6 +1,6 @@
 import play.core.PlayVersion.{current => playVersion}
 import sbt.Keys._
- 
+
 name := "securesocial-slick-bootstrap3-sample"
 organization := "com.micronautics"
 
@@ -10,20 +10,22 @@ version := "0.1.0"
 libraryDependencies ++= Seq(
 		jdbc,
 		"com.typesafe.play"         %% "play"                % playVersion withSources(),
-        "com.typesafe.play"         %% "play-json"           % playVersion withSources(),
-        //"org.postgresql"            %  "postgresql"        % "9.3-1102-jdbc41" withSources(),
-        "ws.securesocial"           %% "securesocial"        % "master-SNAPSHOT" withSources(),
-        "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
-        "org.webjars"               %% "webjars-play"        % "2.2.2-1",
-        "org.scalatestplus"         %% "play"                % "1.2.0" % "test",
+    "com.typesafe.play"         %% "play-json"           % playVersion withSources(),
+    //"org.postgresql"            %  "postgresql"        % "9.3-1102-jdbc41" withSources(),
+    "ws.securesocial"           %% "securesocial"        % "master-SNAPSHOT" withSources(),
+    "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
+    "org.webjars"               %% "webjars-play"        % "2.3.0-2",
+    //"org.scalatestplus"         %% "play"                % "1.2.0" % "test",
+    "com.typesafe.play.plugins" %% "play-plugins-util"   % "2.3.0",
+    "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.0",
 
 		"org.webjars"               %  "bootstrap"           % "3.3.2",
 		//"org.scalaj"                %% "scalaj-http"         % "0.3.14",
 		//"net.sf.jtidy"              %  "jtidy"               % "r938",
-		//com.github.scala-incubator.io"  %% "scala-io-core" % "0.4.2", 
-		//"com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2", 
-		//"org.jdom"                  %  "jdom2"               % "2.0.5", 
-		//"jaxen"                     %  "jaxen"               % "1.1.6", 
+		//com.github.scala-incubator.io"  %% "scala-io-core" % "0.4.2",
+		//"com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2",
+		//"org.jdom"                  %  "jdom2"               % "2.0.5",
+		//"jaxen"                     %  "jaxen"               % "1.1.6",
 		//"org.fluentlenium"          %  "fluentlenium-core"   % "0.9.2",
 		//"org.squeryl"               %% "squeryl"             % "0.9.6-RC2",
 		//"com.netflix.rxjava"      % "rxjava-scala"         % "0.15.0",
@@ -41,8 +43,9 @@ libraryDependencies ++= Seq(
 		"com.github.tototoshi"        %% "slick-joda-mapper"   % "1.2.0" withSources()
 		//"org.seleniumhq.selenium"   %  "selenium-java"       % "2.35.0"
 	)
-	
+
 resolvers ++= Seq(
+  Resolver.typesafeRepo("releases"),
 	Resolver.url("Objectify Play Repository (release)", url("http://schaloner.github.com/releases/"))(Resolver.ivyStylePatterns),
 	Resolver.url("Objectify Play Repository (snapshot)", url("http://schaloner.github.com/snapshots/"))(Resolver.ivyStylePatterns),
 	Resolver.url("play-easymail (release)", url("http://joscha.github.com/play-easymail/repo/releases/"))(Resolver.ivyStylePatterns),
