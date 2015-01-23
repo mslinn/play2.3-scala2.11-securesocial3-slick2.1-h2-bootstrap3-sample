@@ -7,6 +7,8 @@ organization := "com.micronautics"
 scalaVersion := "2.11.5"
 version := "0.1.0"
 
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
 libraryDependencies ++= Seq(
 		jdbc,
 		"com.typesafe.play"         %% "play"                % playVersion withSources(),
