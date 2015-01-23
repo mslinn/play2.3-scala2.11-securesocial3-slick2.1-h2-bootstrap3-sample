@@ -1,4 +1,6 @@
 securesocial-slick-bootstrap3-sample
 ====================================
 
-A sample starting application with securesocial slick using h2 file database integrated with bootstrap3
+A sample application with Securesocial, Slick, H2 file database integrated with Bootstrap3.
+
+Conversion to Play 2.3, Scala 2.11, Slick 2.1 and SS master is in process.
