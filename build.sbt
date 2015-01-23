@@ -16,8 +16,6 @@ libraryDependencies ++= Seq(
     "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
     "org.webjars"               %% "webjars-play"        % "2.3.0-2",
     //"org.scalatestplus"         %% "play"                % "1.2.0" % "test",
-    "com.typesafe.play.plugins" %% "play-plugins-util"   % "2.3.0",
-    "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.0",
 
 		"org.webjars"               %  "bootstrap"           % "3.3.2",
 		//"org.scalaj"                %% "scalaj-http"         % "0.3.14",
