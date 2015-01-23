@@ -1,5 +1,5 @@
-securesocial-slick-bootstrap3-sample
-====================================
+play2.3-scala2.11-securesocial3-slick2.1-h2-bootstrap3-sample
+=============================================================
 
 A sample application with Securesocial, Slick, H2 file database integrated with Bootstrap3.
 
