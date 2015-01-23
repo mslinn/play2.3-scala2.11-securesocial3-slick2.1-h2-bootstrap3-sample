@@ -20,10 +20,10 @@ class MessageController(override implicit val env: RuntimeEnvironment[User]) ext
     Ok(Json.toJson(Message("Hello from Scala")))
   }
 
-  def javascriptRoutes = Action { implicit request =>
-    import securesocial.controllers.routes.javascript.LoginPage
-    Ok(Routes.javascriptRouter("jsRoutes")(LoginPage.login)).as(JAVASCRIPT)
-  }
+//  def javascriptRoutes = Action { implicit request =>
+//    import controllers.javascript.routes.CustomLoginController.LoginPage
+//    Ok(Routes.javascriptRouter("jsRoutes")(LoginPage.login)).as(JAVASCRIPT)
+//  }
 
   def search = index()
   //  UserAwareAction {

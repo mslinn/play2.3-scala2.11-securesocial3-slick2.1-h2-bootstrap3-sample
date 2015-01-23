@@ -7,7 +7,7 @@ GET         /humans.txt                       controllers.Assets.at(path="/publi
 GET         /favicon.ico                      controllers.Assets.at(path="/public", file="favicon.ico")
 
 GET         /                                 @controllers.MessageController.index
-GET         /assets/javascripts/routes        @controllers.MessageController.javascriptRoutes()
+#GET         /assets/javascripts/routes        @controllers.MessageController.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.at(path="/public", file)

@@ -1,16 +1,14 @@
 package models
 
-import _root_.java.sql.Date
-import securesocial.core._
-import scala.slick.lifted.ProvenShape
-import scala.slick.driver.H2Driver.simple._
 import com.github.tototoshi.slick.H2JodaSupport._
-import securesocial.core.providers.Token
 import org.joda.time.DateTime
+import securesocial.core._
 import scala.language.implicitConversions
+import scala.slick.driver.H2Driver.simple._
+import scala.slick.lifted.ProvenShape
 
-case class User(uid: Option[Long] = None,
-  identityId: IdentityId,
+case class User(
+  identityId: String,
   firstName: String,
   lastName: String,
   fullName: String,
@@ -19,19 +17,24 @@ case class User(uid: Option[Long] = None,
   authMethod: AuthenticationMethod,
   oAuth1Info: Option[OAuth1Info],
   oAuth2Info: Option[OAuth2Info],
-  passwordInfo: Option[PasswordInfo] = None) extends Identity
+  passwordInfo: Option[PasswordInfo] = None,
+  providerId: String = "userpass",
+  uid: Option[Long] = None
+)
 
 object UserFromIdentity {
-  def apply(i: Identity): User = User(None, i.identityId, i.firstName, i.lastName, i.fullName,
-    i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info)
+  def apply(user: User): User = User(user.identityId, user.firstName, user.lastName, user.fullName,
+    user.email, user.avatarUrl, user.authMethod, user.oAuth1Info, user.oAuth2Info)
 }
 
 class Users(tag: Tag) extends Table[User](tag, "user") {
   import scala.slick.driver.H2Driver
 
-  implicit def string2AuthenticationMethod: H2Driver.BaseColumnType[AuthenticationMethod] = MappedColumnType.base[AuthenticationMethod, String](
-    authenticationMethod => authenticationMethod.method,
-    string => AuthenticationMethod(string))
+  implicit def string2AuthenticationMethod: H2Driver.BaseColumnType[AuthenticationMethod] =
+    MappedColumnType.base[AuthenticationMethod, String] (
+      authenticationMethod => authenticationMethod.method,
+      string => AuthenticationMethod(string)
+    )
 
   implicit def tuple2OAuth1Info(tuple: (Option[String], Option[String])): Option[OAuth1Info] = tuple match {
     case (Some(token), Some(secret)) => Some(OAuth1Info(token, secret))
@@ -43,40 +46,24 @@ class Users(tag: Tag) extends Table[User](tag, "user") {
     case _ => None
   }
 
-  implicit def tuple2IdentityId(tuple: (String, String)): IdentityId = tuple match {
-    case (userId, providerId) => IdentityId(userId, providerId)
-  }
-
-  def uid = column[Long]("id", O.PrimaryKey, O.AutoInc)
-
-  def userId = column[String]("userId")
-
-  def providerId = column[String]("providerId")
-
-  def email = column[Option[String]]("email")
-
-  def firstName = column[String]("firstName")
-
-  def lastName = column[String]("lastName")
-
-  def fullName = column[String]("fullName")
-
-  def authMethod = column[AuthenticationMethod]("authMethod")
-
-  def avatarUrl = column[Option[String]]("avatarUrl")
+  def uid          = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def userId       = column[String]("userId")
+  def providerId   = column[String]("providerId")
+  def email        = column[Option[String]]("email")
+  def firstName    = column[String]("firstName")
+  def lastName     = column[String]("lastName")
+  def fullName     = column[String]("fullName")
+  def authMethod   = column[AuthenticationMethod]("authMethod")
+  def avatarUrl    = column[Option[String]]("avatarUrl")
 
   // oAuth 1
-  def token = column[Option[String]]("token")
-
-  def secret = column[Option[String]]("secret")
+  def token        = column[Option[String]]("token")
+  def secret       = column[Option[String]]("secret")
 
   // oAuth 2
-  def accessToken = column[Option[String]]("accessToken")
-
-  def tokenType = column[Option[String]]("tokenType")
-
-  def expiresIn = column[Option[Int]]("expiresIn")
-
+  def accessToken  = column[Option[String]]("accessToken")
+  def tokenType    = column[Option[String]]("tokenType")
+  def expiresIn    = column[Option[Int]]("expiresIn")
   def refreshToken = column[Option[String]]("refreshToken")
 
   def * : ProvenShape[User] = {
@@ -98,8 +85,9 @@ class Users(tag: Tag) extends Table[User](tag, "user") {
 
     shapedValue.<>({
       tuple =>
-        User.apply(uid = tuple._1,
-          identityId = tuple2IdentityId(tuple._2, tuple._3),
+        User(
+          uid = tuple._1,
+          identityId = tuple._2,
           firstName = tuple._4,
           lastName = tuple._5,
           fullName = tuple._6,
@@ -113,8 +101,8 @@ class Users(tag: Tag) extends Table[User](tag, "user") {
         Some {
           (
             u.uid,
-            u.identityId.userId,
-            u.identityId.providerId,
+            u.identityId,
+            u.providerId,
             u.firstName,
             u.lastName,
             u.fullName,
@@ -130,33 +118,28 @@ class Users(tag: Tag) extends Table[User](tag, "user") {
         }
     })
   }
-
 }
 
-class Tokens(tag: Tag) extends Table[Token](tag, "token") {
+import securesocial.core.providers.MailToken
 
+class MailTokens(tag: Tag) extends Table[MailToken](tag, "token") {
   def uuid = column[String]("uuid")
-
   def email = column[String]("email")
-
   def creationTime = column[DateTime]("creationTime")
-
   def expirationTime = column[DateTime]("expirationTime")
-
   def isSignUp = column[Boolean]("isSignUp")
 
-  def * : ProvenShape[Token] = {
+  def * : ProvenShape[MailToken] = {
     val shapedValue = (uuid, email, creationTime, expirationTime, isSignUp).shaped
-
     shapedValue.<>({
       tuple =>
-        Token(uuid = tuple._1,
+        MailToken(uuid = tuple._1,
           email = tuple._2,
           creationTime = tuple._3,
           expirationTime = tuple._4,
           isSignUp = tuple._5)
     }, {
-      (t: Token) =>
+      (t: MailToken) =>
         Some {
           (t.uuid,
             t.email,
@@ -192,99 +175,82 @@ trait WithDefaultSession {
 }
 
 object Tables extends WithDefaultSession {
-
-  val Tokens = new TableQuery[Tokens](new Tokens(_)) {
-
-    def findById(tokenId: String): Option[Token] = withSession {
+  val Tokens = new TableQuery[MailTokens](new MailTokens(_)) {
+    def findById(tokenId: String): Option[MailToken] = withSession {
       implicit session =>
         val q = for {
           token <- this
           if token.uuid is tokenId
         } yield token
-
         q.firstOption
     }
 
-    def save(token: Token): Token = withSession {
-      implicit session =>
+    def save(token: MailToken): MailToken = withSession { implicit session =>
         findById(token.uuid) match {
-          case None => {
+          case None =>
             this.insert(token)
             token
-          }
-          case Some(existingToken) => {
+
+          case Some(existingToken) =>
             val tokenRow = for {
-              t <- this
-              if t.uuid is existingToken.uuid
-            } yield t
+                             t <- this
+                             if t.uuid is existingToken.uuid
+                           } yield t
 
             val updatedToken = token.copy(uuid = existingToken.uuid)
             tokenRow.update(updatedToken)
             updatedToken
-          }
         }
     }
 
-    def delete(uuid: String) = withSession {
-      implicit session =>
+    def delete(uuid: String) = withSession { implicit session =>
         val q = for {
-          t <- this
-          if t.uuid is uuid
-        } yield t
-
+                  t <- this
+                  if t.uuid is uuid
+                } yield t
         q.delete
     }
 
-    def deleteExpiredTokens(currentDate: DateTime) = withSession {
-      implicit session =>
+    def deleteExpiredTokens(currentDate: DateTime) = withSession { implicit session =>
         val q = for {
-          t <- this
-          if t.expirationTime < currentDate
-        } yield t
-
+                  t <- this
+                  if t.expirationTime < currentDate
+                } yield t
         q.delete
     }
   }
 
   val Users = new TableQuery[Users](new Users(_)) {
-    import concurrent.Future
-
     def autoInc = this returning this.map(_.uid)
 
-    def findById(id: Long) = withSession {
-      implicit session =>
+    def findById(id: Long) = withSession { implicit session =>
         val q = for {
-          user <- this
-          if user.uid is id
-        } yield user
-
+                  user <- this
+                  if user.uid is id
+                } yield user
         q.firstOption
     }
 
-    def findByEmailAndProvider(email: String, providerId: String): Option[User] = withSession {
-      implicit session =>
+    def findByEmailAndProvider(email: String, providerId: String): Option[User] = withSession { implicit session =>
         this.filter(x => x.email === email && x.providerId === providerId).firstOption
     }
 
-    def findByIdentityId(userId: String, providerId: String="userpass"): Future[Option[User]] = withSession { implicit session =>
-      Future(filter(x => x.userId === userId && x.providerId === providerId).firstOption)
+    def findByIdentityId(userId: String, providerId: String="userpass"): Option[User] = withSession { implicit session =>
+      filter(x => x.userId === userId && x.providerId === providerId).firstOption
     }
 
-    def all = withSession {
-      implicit session =>
-        this.list
+    def all = withSession { implicit session => this.list
     }
 
-    def save(i: String): User = this.save(UserFromIdentity(i))
+    def save(id: String): User = save(UserFromIdentity(id))
 
-    def save(user: User): User = withSession {
-      implicit session =>
+    def save(user: User): User = withSession { implicit session =>
         findByIdentityId(user.identityId) match {
-          case None => {
-            val uid = this.autoInc.insert(user)
+          case None =>
+            val uid = autoInc.insert(user)
             user.copy(uid = Some(uid))
-          }
-          case Some(existingUser) => {
+
+          case Some(existingUser) =>
             val userRow = for {
               u <- this
               if u.uid is existingUser.uid
@@ -293,9 +259,8 @@ object Tables extends WithDefaultSession {
             val updatedUser = user.copy(uid = existingUser.uid)
             userRow.update(updatedUser)
             updatedUser
-          }
+
         }
     }
-
   }
 }
