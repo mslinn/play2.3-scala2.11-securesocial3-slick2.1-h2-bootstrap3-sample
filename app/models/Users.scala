@@ -2,15 +2,12 @@ package models
 
 import _root_.java.sql.Date
 import securesocial.core._
-
 import scala.slick.lifted.ProvenShape
-
 import scala.slick.driver.H2Driver.simple._
 import com.github.tototoshi.slick.H2JodaSupport._
-
 import securesocial.core.providers.Token
-
 import org.joda.time.DateTime
+import scala.language.implicitConversions
 
 case class User(uid: Option[Long] = None,
   identityId: IdentityId,
@@ -30,8 +27,9 @@ object UserFromIdentity {
 }
 
 class Users(tag: Tag) extends Table[User](tag, "user") {
+  import scala.slick.driver.H2Driver
 
-  implicit def string2AuthenticationMethod = MappedColumnType.base[AuthenticationMethod, String](
+  implicit def string2AuthenticationMethod: H2Driver.BaseColumnType[AuthenticationMethod] = MappedColumnType.base[AuthenticationMethod, String](
     authenticationMethod => authenticationMethod.method,
     string => AuthenticationMethod(string))
 
@@ -171,7 +169,6 @@ class Tokens(tag: Tag) extends Table[Token](tag, "token") {
 }
 
 trait WithDefaultSession {
-
   def withSession[T](block: (Session => T)) = {
     val a = _root_.play.api.Configuration.empty
     //import _root_.play.api.Configuration
@@ -192,7 +189,6 @@ trait WithDefaultSession {
         block(session)
     }
   }
-
 }
 
 object Tables extends WithDefaultSession {
@@ -248,10 +244,11 @@ object Tables extends WithDefaultSession {
 
         q.delete
     }
-
   }
 
   val Users = new TableQuery[Users](new Users(_)) {
+    import concurrent.Future
+
     def autoInc = this returning this.map(_.uid)
 
     def findById(id: Long) = withSession {
@@ -269,9 +266,8 @@ object Tables extends WithDefaultSession {
         this.filter(x => x.email === email && x.providerId === providerId).firstOption
     }
 
-    def findByIdentityId(identityId: IdentityId): Option[User] = withSession {
-      implicit session =>
-        this.filter(x => x.userId === identityId.userId && x.providerId === identityId.providerId).firstOption
+    def findByIdentityId(userId: String, providerId: String="userpass"): Future[Option[User]] = withSession { implicit session =>
+      Future(filter(x => x.userId === userId && x.providerId === providerId).firstOption)
     }
 
     def all = withSession {
@@ -279,7 +275,7 @@ object Tables extends WithDefaultSession {
         this.list
     }
 
-    def save(i: Identity): User = this.save(UserFromIdentity(i))
+    def save(i: String): User = this.save(UserFromIdentity(i))
 
     def save(user: User): User = withSession {
       implicit session =>

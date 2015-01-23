@@ -1,14 +1,21 @@
-package plugins
+package service
 
-import play.api.Application
-import securesocial.core.{ IdentityId, Identity, UserServicePlugin }
-import securesocial.core.providers.Token
+import models.User
 import models.Tables._
 import org.joda.time.DateTime
+import play.api.Logger
+import securesocial.core._
+import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
+import scala.concurrent.Future
+import securesocial.core.services.{ UserService, SaveMode }
 
-class UserService(application: Application) extends UserServicePlugin(application) {
+class DBUserService extends UserService[User] {
+  val logger = Logger("service.DBUserService")
 
-  def find(id: IdentityId) = Users.findByIdentityId(id)
+  def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
+//    if (logger.isDebugEnabled) logger.debug("users = %s".format(users))
+    Users.findByIdentityId(userId)
+  }
 
   def save(user: Identity) = Users.save(user)
 
