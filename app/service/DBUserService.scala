@@ -1,43 +1,32 @@
 package service
 
-import models.User
 import models.Tables._
+import models.User
 import org.joda.time.DateTime
 import play.api.Logger
 import securesocial.core._
-import securesocial.core.providers.{ UsernamePasswordProvider, MailToken }
+import securesocial.core.providers.MailToken
+import securesocial.core.services.UserService
 import scala.concurrent.Future
-import securesocial.core.services.{ UserService, SaveMode }
 
 class DBUserService extends UserService[User] {
   val logger = Logger("service.DBUserService")
 
   def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
 //    if (logger.isDebugEnabled) logger.debug("users = %s".format(users))
-    Users.findByIdentityId(userId)
+    Users.findByIdentityId(userId, providerId)
   }
 
-  def save(user: Identity) = Users.save(user)
-
-  // Since we're not using username/password login, we don't need the methods below
-  def findByEmailAndProvider(email: String, providerId: String) = {
+  def findByEmailAndProvider(email: String, providerId: String) =
     Users.findByEmailAndProvider(email, providerId)
-  }
 
-  def save(token: Token) {
-    Tokens.save(token)
-  }
+  def save(token: MailToken) = MailTokens.save(token)
 
-  def findToken(tokenId: String) = {
-    Tokens.findById(tokenId)
-  }
+  def findToken(tokenId: String) = MailTokens.findById(tokenId)
 
-  def deleteToken(uuid: String) {
-    Tokens.delete(uuid)
-  }
+  def deleteToken(uuid: String) = MailTokens.delete(uuid)
 
-  def deleteExpiredTokens() {
-    Tokens.deleteExpiredTokens(DateTime.now())
-  }
+  def deleteExpiredTokens() = MailTokens.deleteExpiredTokens(DateTime.now())
+
   def link(current: Identity, to: Identity) = ???
 }
