@@ -13,18 +13,18 @@ libraryDependencies ++= Seq(
   jdbc,
   "com.typesafe.play"         %% "play"                % playVersion withSources(),
   "com.typesafe.play"         %% "play-json"           % playVersion withSources(),
-  "org.webjars"               %% "webjars-play"        % "2.3.0-2",
-  "com.typesafe.slick"        %% "slick"               % "2.1.0" withSources(),
+  "org.webjars"               %% "webjars-play"        % "2.3.0-2"   withSources(),
+  //"com.typesafe.slick"        %% "slick"               % "2.1.0"     withSources(),
+  "com.typesafe.play"         %% "play-slick"          % "0.8.1"     withSources(),
   "ws.securesocial"           %% "securesocial"        % "master-SNAPSHOT" withSources(),
   "org.webjars"               %  "bootstrap"           % "3.3.2",
-  //"com.typesafe.play"         %% "play-slick"          % "0.6.0.1",
-  "com.github.nscala-time"      %% "nscala-time"         % "1.6.0" withSources(),
-  "org.joda"                    %  "joda-convert"        % "1.6" withSources(),
-  "com.github.tototoshi"        %% "slick-joda-mapper"   % "1.2.0" withSources(),
+  "com.github.nscala-time"    %% "nscala-time"         % "1.6.0"     withSources(),
+  "org.joda"                  %  "joda-convert"        % "1.6"       withSources(),
+  "com.github.tototoshi"      %% "slick-joda-mapper"   % "1.2.0"     withSources(),
   //
-  //"org.scalatestplus"         %% "play"                % "1.2.0" % "test",
+  "org.scalatestplus"         %% "play"                % "1.2.0" % "test",
   "org.scalatest"             %% "scalatest"           % "2.2.1" % "test" withSources(),
-  "junit"                     %  "junit"               % "4.12" % "test"
+  "junit"                     %  "junit"               % "4.12"  % "test"
 )
 
 resolvers ++= Seq(
