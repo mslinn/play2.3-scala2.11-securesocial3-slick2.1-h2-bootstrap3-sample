@@ -2,30 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /robots.txt                       controllers.Assets.at(path="/public", file="robots.txt")
-GET         /humans.txt                       controllers.Assets.at(path="/public", file="humans.txt")
-GET         /favicon.ico                      controllers.Assets.at(path="/public", file="favicon.ico")
-
-GET         /                                 @controllers.MessageController.index
-#GET         /assets/javascripts/routes        @controllers.MessageController.javascriptRoutes()
+# Home page
+GET        /                    @controllers.Application.index
+GET        /only-twitter        @controllers.Application.onlyTwitter
+GET        /link-result         @controllers.Application.linkResult
+GET        /current-user        @controllers.Application.currentUser
+GET        /custom/login        @controllers.CustomLoginController.login
+GET        /custom/logout       @controllers.CustomLoginController.logout
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                     controllers.Assets.at(path="/public", file)
-GET         /webjars/*file                    controllers.WebJarAssets.at(file)
-GET         /results                          @controllers.MessageController.search
-GET         /search/:searchTerm               @controllers.MessageController.search2(searchTerm)
-
-#securesocial.start
-#GET         /only-twitter                     @controllers.Application.onlyTwitter
-#GET         /link-result                      @controllers.Application.linkResult
-GET         /current-user                     @controllers.Application.currentUser
-GET         /login                            @controllers.CustomLoginController.login
-GET         /logout                           @controllers.CustomLoginController.logout
-GET         /password                         @securesocial.controllers.PasswordChange.page
-POST        /password                         @securesocial.controllers.PasswordChange.handlePasswordChange
-# Providers entry points
-GET         /authenticate/:provider           @securesocial.controllers.ProviderController.authenticate(provider)
-POST        /authenticate/:provider           @securesocial.controllers.ProviderController.authenticateByPost(provider)
-#GET     /not-authorized             @securesocial.controllers.ProviderController.notAuthorized
-->          /auth                             securesocial.Routes
-#securesocial.end
+GET        /assets/*file        controllers.Assets.at(path="/public", file)
+->         /auth                securesocial.Routes
