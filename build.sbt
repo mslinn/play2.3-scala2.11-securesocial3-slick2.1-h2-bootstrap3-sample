@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "org.webjars"               %  "bootstrap"                     % "3.3.2",
 
   "ws.securesocial"           %% "securesocial"                  % "3.0-M3",
+  "ws.securesocial"           %% "securesocial"                  % "3.0-M3" classifier "assets",
 
   "org.scalatestplus"         %% "play"                          % "1.2.0" % "test",
   "org.scalatest"             %% "scalatest"                     % "2.2.1" % "test",
