@@ -1,4 +1,4 @@
-name := "play2.3-scala2.11-scalikejdbc-securesocial3-bootstrap3-sample"
+name := "play-scala-scalikejdbc-async-securesocial-bootstrap-sample"
 
 organization := "com.micronautics"
 
