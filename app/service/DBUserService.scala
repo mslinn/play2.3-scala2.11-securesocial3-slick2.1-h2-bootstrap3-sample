@@ -1,32 +1,53 @@
 package service
 
-import models.Tables._
-import models.User
-import org.joda.time.DateTime
+import models.{TokenDB, BasicProfileDB, BasicUser}
 import play.api.Logger
 import securesocial.core._
 import securesocial.core.providers.MailToken
-import securesocial.core.services.UserService
+import securesocial.core.services.{UserService, SaveMode}
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class DBUserService extends UserService[User] {
-  val logger = Logger("service.DBUserService")
+class DBUserService extends UserService[BasicUser] {
 
-  def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
-//    if (logger.isDebugEnabled) logger.debug("users = %s".format(users))
-    Users.findByIdentityId(userId, providerId)
+  override def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
+    BasicProfileDB.find(providerId, userId)
   }
 
-  def findByEmailAndProvider(email: String, providerId: String) =
-    Users.findByEmailAndProvider(email, providerId)
+  override def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = {
+    BasicProfileDB.findByEmailAndProvider(email, providerId)
+  }
 
-  def save(token: MailToken) = MailTokens.save(token)
+  override def deleteToken(uuid: String): Future[Option[MailToken]] = {
+    TokenDB.deleteToken(uuid)
+  }
 
-  def findToken(tokenId: String) = MailTokens.findById(tokenId)
+  override def link(current: BasicUser, to: BasicProfile): Future[BasicUser] = {
+    BasicUser.link(current, to)
+  }
 
-  def deleteToken(uuid: String) = MailTokens.delete(uuid)
+  override def passwordInfoFor(user: BasicUser): Future[Option[PasswordInfo]] = {
+    BasicUser.passwordInfoFor(user)
+  }
 
-  def deleteExpiredTokens() = MailTokens.deleteExpiredTokens(DateTime.now())
+  override def save(profile: BasicProfile, mode: SaveMode): Future[BasicUser] = {
+    BasicUser.save(profile, mode)
+  }
 
-  def link(current: Identity, to: Identity) = ???
+  override def findToken(token: String): Future[Option[MailToken]] = {
+    TokenDB.findToken(token)
+  }
+
+  override def deleteExpiredTokens(): Unit = {
+    TokenDB.deleteExpiredTokens().foreach(identity)
+  }
+
+  override def updatePasswordInfo(user: BasicUser, info: PasswordInfo): Future[Option[BasicProfile]] = {
+    BasicUser.updatePasswordInfo(user, info)
+  }
+
+  override def saveToken(token: MailToken): Future[MailToken] = {
+    TokenDB.saveToken(token)
+  }
+
 }

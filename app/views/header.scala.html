@@ -1,0 +1,5 @@
+@(profile: securesocial.core.BasicProfile)(implicit request: RequestHeader)
+
+<div class="page-header">
+    <h2>@for(url <- profile.avatarUrl) {<img src="@url" width="40px" height="40px"/>} Welcome @profile.firstName</h2>
+</div>

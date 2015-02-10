@@ -1,20 +1,19 @@
 package controllers
 
-import securesocial.controllers.BaseLoginPage
-import play.api.mvc.{ RequestHeader, AnyContent, Action }
+import models.BasicUser
 import play.api.Logger
-import securesocial.core.{ RuntimeEnvironment, IdentityProvider }
-import models.User
+import play.api.mvc.{Action, AnyContent, RequestHeader}
+import securesocial.controllers.BaseLoginPage
 import securesocial.core.services.RoutesService
+import securesocial.core.{IdentityProvider, RuntimeEnvironment}
 
-class CustomLoginController(implicit override val env: RuntimeEnvironment[User]) extends BaseLoginPage[User] {
+class CustomLoginController(implicit override val env: RuntimeEnvironment[BasicUser]) extends BaseLoginPage[BasicUser] {
   override def login: Action[AnyContent] = {
-    Logger.debug("Using CustomLoginController")
+    Logger.debug("using CustomLoginController")
     super.login
   }
 }
 
 class CustomRoutesService extends RoutesService.Default {
-  override def loginPageUrl(implicit req: RequestHeader): String =
-    routes.CustomLoginController.login().absoluteURL(IdentityProvider.sslEnabled)
+  override def loginPageUrl(implicit req: RequestHeader): String = controllers.routes.CustomLoginController.login().absoluteURL(IdentityProvider.sslEnabled)
 }

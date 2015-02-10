@@ -1,0 +1,14 @@
+@(user: models.BasicUser)(implicit request: RequestHeader)
+
+@main("SecureSocial - Account Link Result") {
+
+    @header(user.basicProfiles.head)
+
+    <div class="clearfix">
+        <h2>You are linked to the following accounts:</h2>
+
+        @user.basicProfiles.map(basicprofile(_))
+    </div>
+
+    <a class="btn" href="/">Ok</a>
+}
