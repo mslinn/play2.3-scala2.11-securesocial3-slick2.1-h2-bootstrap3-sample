@@ -11,9 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+ * limitations under the License. */
 import controllers.CustomRoutesService
 import java.lang.reflect.Constructor
 import models.BasicUser
@@ -31,7 +29,6 @@ object Global extends play.api.GlobalSettings {
     override lazy val userService: DBUserService = new DBUserService()
     override lazy val eventListeners = List(new SecureSocialEventListener())
   }
-
 
   /**
    * An implementation that checks if the controller expects a RuntimeEnvironment and
@@ -64,5 +61,4 @@ object Global extends play.api.GlobalSettings {
     warningThresholdMillis = 3000L,
     warningLogLevel = 'warn
   )
-
 }

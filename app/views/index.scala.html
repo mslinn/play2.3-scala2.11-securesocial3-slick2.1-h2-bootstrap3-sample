@@ -1,31 +1,24 @@
 @(user: securesocial.core.BasicProfile)(implicit request: RequestHeader, env: securesocial.core.RuntimeEnvironment[models.BasicUser])
-
 @import securesocial.core.AuthenticationMethod._
-
-@main("SecureSocial - Sample Protected Page") {
-
-    @header(user)
-
-    <div class="clearfix">
-        @basicprofile(user)
-
-        <hr>
-        @user.passwordInfo.map { info =>
-            <a class="btn" href="@env.routes.passwordChangeUrl">Change Password</a>
+@main("Front Page") {
+  @header(user)
+  <div class="clearfix">
+    @basicprofile(user)
+    <hr>
+    @user.passwordInfo.map { info =>
+      <a class="btn" href="@env.routes.passwordChangeUrl">Change Password</a>
+    }
+    <hr>
+    <span>Link this account to
+    @env.providers.values.map { provider =>
+      @if(provider.authMethod == OAuth1 || provider.authMethod == OAuth2) {
+        @defining( "images/providers/%s.png".format(provider.id) ) { imageUrl =>
+          <a href="@env.routes.authenticationUrl(provider.id, Some("/link-result"))"><img src="@securesocial.controllers.routes.Assets.at(imageUrl)"/></a>
         }
-        <hr>
-
-        <span>Link this account to
-
-        @env.providers.values.map { provider =>
-            @if( provider.authMethod == OAuth1 || provider.authMethod == OAuth2 ) {
-                @defining( "images/providers/%s.png".format(provider.id) ) { imageUrl =>
-                <a href="@env.routes.authenticationUrl(provider.id, Some("/link-result"))"> <img src="@securesocial.controllers.routes.Assets.at(imageUrl)"/></a>
-                }
-            }
-        }
-        </span>
-        <hr>
-        <a class="btn" href="@securesocial.controllers.routes.LoginPage.logout()">Logout</a>
-    </div>
+      }
+    }
+    </span>
+    <hr>
+    <a class="btn" href="@securesocial.controllers.routes.LoginPage.logout()">Logout</a>
+  </div>
 }

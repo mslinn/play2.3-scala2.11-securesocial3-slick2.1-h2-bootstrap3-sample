@@ -11,9 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+ * limitations under the License. */
 package controllers
 
 import models.BasicUser
@@ -26,7 +24,7 @@ class Application(override implicit val env: RuntimeEnvironment[BasicUser]) exte
     Ok(views.html.index(request.user.basicProfiles.head))
   }
 
-  // a sample action using an authorization implementation
+  /** a sample action using an authorization implementation */
   def onlyTwitter = SecuredAction(WithProvider("twitter")) { implicit request =>
     Ok("You can see this because you logged in using Twitter")
   }
@@ -35,9 +33,7 @@ class Application(override implicit val env: RuntimeEnvironment[BasicUser]) exte
     Ok(views.html.linkResult(request.user))
   }
 
-  /**
-   * Sample use of SecureSocial.currentUser. Access the /current-user to test it
-   */
+  /** Sample use of SecureSocial.currentUser. Access /current-user to test it */
   def currentUser = Action.async { implicit request =>
     SecureSocial.currentUser[BasicUser].map { maybeUser =>
       val userId = maybeUser.map(_.basicProfiles.head.userId).getOrElse("unknown")
@@ -46,7 +42,7 @@ class Application(override implicit val env: RuntimeEnvironment[BasicUser]) exte
   }
 }
 
-// An Authorization implementation that only authorizes uses that logged in using twitter
+/** An Authorization implementation that only authorizes uses that logged in using twitter */
 case class WithProvider(provider: String) extends Authorization[BasicUser] {
   def isAuthorized(user: BasicUser, request: RequestHeader) = {
     user.basicProfiles.head.providerId == provider
