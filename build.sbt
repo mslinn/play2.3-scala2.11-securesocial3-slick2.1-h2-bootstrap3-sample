@@ -1,4 +1,4 @@
-name := "play-scala-scalikejdbc-async-securesocial-bootstrap-sample"
+name := "secure-async"
 
 organization := "com.micronautics"
 
@@ -35,7 +35,7 @@ PlayKeys.routesImport ++= Seq("scala.language.reflectiveCalls")
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7", "-target", "1.7", "-g:vars")
 
-herokuAppName in Compile := "akka-http-microservice"
+herokuAppName in Compile := "secure-async"
 herokuJdkVersion in Compile := "1.8"
 
 // this causes IntelliJ to not find the source and javadoc jars
