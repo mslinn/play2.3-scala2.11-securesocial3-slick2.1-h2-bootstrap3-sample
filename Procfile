@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/secure-async -Dhttp.port=${PORT} -DapplyEvolutions.default=true
+web: target/universal/stage/bin/secure-async -Dhttp.port=${PORT}
